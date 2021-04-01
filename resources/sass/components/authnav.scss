@@ -1,0 +1,99 @@
+.auth-nav {
+    .right {
+        transition: all 0.3s ease-in-out;
+        transform: translate(0, 0);
+        &.mobile-hidden {
+            transform: translate(-100%, 0);
+        }
+    }
+    .svg-full {
+        svg rect {
+            transition: transform .3s ease, fill .3s ease;
+            transform-origin: left center;
+        }
+        &.mobile-nav-show {
+            svg rect:first-child {
+                transform: scalex(.4);
+            }
+            svg rect:last-child {
+                transform: scalex(2.5);
+            }
+        }
+    }
+}
+
+.sidebar {
+    transition: transform 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
+    background: #ffffff;
+}
+.sidebar::before, .off-canvas-sidebar nav .navbar-collapse::before {
+    display: none;
+}
+
+/* ANIMATED RIGHT ARROW */
+.navbar-light .navbar-toggler.rarr .navbar-toggler-icon {
+    background-image: none !important;
+}
+
+.navbar-toggler.rarr .navbar-toggler-icon {
+	width: 22px;
+	-webkit-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.navbar-toggler.rarr .navbar-toggler-icon:nth-of-type(1) {
+	transform: translate3d(0,0,0) rotate(0deg);
+	transform-origin: right top;
+	width: 22px;
+}
+
+.navbar-toggler.rarr .navbar-toggler-icon:nth-of-type(2) {
+	transform: translate3d(0,0,0) rotate(0deg);
+}
+
+.navbar-toggler.rarr .navbar-toggler-icon:nth-of-type(3) {
+	transform: translate3d(0,0,0) rotate(0deg);
+	transform-origin: right bottom;
+	width: 22px;
+}
+
+body.show-sidebar .navbar-toggler.rarr .navbar-toggler-icon:nth-of-type(1) {
+	transform: translate3d(11px,6px,0) rotate(45deg);
+	transform-origin: right top;
+	width: 11px;
+}
+
+body.show-sidebar .navbar-toggler.rarr .navbar-toggler-icon:nth-of-type(3) {
+	transform: translate3d(11px,-6px,0) rotate(-45deg);
+	transform-origin: right bottom;
+	width: 11px;
+}
+/* END ANIMATED RIGHT ARROW */
+
+@media (min-width: $lg) {
+    .auth-nav {
+        .right {
+            &.mobile-hidden {
+                transform: translate(0, 0);
+            }
+        }
+    }
+}
+
+@media (max-width: $lg - 1px) {
+    .name-nav {
+        display: none;
+    }
+    .sidebar {
+        margin-top: 58px !important;
+    }
+    body.show-sidebar {
+        .sidebar {
+            transform: translate(0, 0);
+            border-right: none;
+            border-left: 1px solid #ddd;
+            transition: transform 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
+        }
+    }
+}
