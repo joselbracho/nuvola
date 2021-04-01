@@ -17,10 +17,18 @@ class Travel extends Model
      *
      * @var array
      */
+    
+    protected $table = 'travels';
+
     protected $fillable = [
         'travel_date',
         'country_id',
         'city',
         'client_email',
     ];
+
+    public function client(): BelongsToo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

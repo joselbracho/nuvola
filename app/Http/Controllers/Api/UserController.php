@@ -62,15 +62,12 @@ class UserController extends Controller
         try {
 
 			$this->validateRequest($request, 'create_user');
-			$building = Building::where('institution_id', '=', $request->current_institution->id)->first();
-			$first_entrace = $building->entraces->first();
+
 			$user = new User;
 			$user->name = $request->name;
 			$user->email = $request->email;
 			$user->password = bcrypt($request->password);
-			$user->institution_id = $request->current_institution->id;
 			$user->role_id = $request->role_id;
-			$user->entrace_id = $first_entrace->id;
 			$user->save();
             
 			return (new UserResource($user))

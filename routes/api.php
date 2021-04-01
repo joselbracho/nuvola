@@ -25,12 +25,16 @@ Route::name('api.')->namespace('Api')->group(function () {
         Route::post('clients/delete/{id}', 'ClientController@delete')->name('clients.delete');
         // get client
         Route::get('clients/{id}', 'ClientController@getClient')->name('clients.get');
+        // get client image
+        Route::get('clients/{id}/getImage', 'ClientController@getImage')->name('clients.getImage');
         // list travels
         Route::get('travels', 'TravelController@getTravels')->name('travels.list');
-        // SOAP travels
-        Route::any('/soap/travels','SoapController@soap');
         // get travel
         Route::get('travels/{id}', 'TravelController@getTravel')->name('travels.get');
+        // create travel
+        Route::post('travels/create', 'TravelController@create')->name('travels.create');
+        // SOAP travels
+        Route::any('/soap/travels','SoapController@soap');
 
         
     });

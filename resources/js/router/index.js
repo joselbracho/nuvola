@@ -8,10 +8,10 @@ import { initAuthFromExistingToken } from '../actions/auth';
 import GuestRoute from './GuestRoute';
 import store from '../store';
 
-// Landing
-import Landing from '../pages/Landing';
-// Historial
-import Historial from '../pages/Historial';
+// Clients
+import Clients from '../pages/Clients';
+import ViewClient from '../pages/ViewClient';
+
 // 404
 import NotFound from '../pages/404';
 const { dispatch } = store;
@@ -51,8 +51,8 @@ class App extends Component {
 
       <Router>
           <Switch>
-            <GuestRoute exact path="/" component={Landing} />
-            <GuestRoute exact path="/historial" component={Historial} />
+            <GuestRoute exact path="/" component={Clients} />
+            <GuestRoute exact path="/clients/:id" component={ViewClient} />
             <Route component={NotFound} />
           </Switch>
       </Router>

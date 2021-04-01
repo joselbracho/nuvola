@@ -39,7 +39,7 @@ class ClientController extends Controller
 
     public function getClient($id)
     {
-        return new ClientResource(Client::find($id));
+        return new ClientResource(Client::find($id)->with('travels')->get());
     }
 
 
@@ -59,16 +59,16 @@ class ClientController extends Controller
                 );
             }
           
-            $inci_user = new Client;
-            $inci_user->name = $request->input('name');
-            $inci_user->last_name = $request->input('last_name');
-            $inci_user->email = $request->input('email');
-            $inci_user->phone = $request->input('phone');
-            $inci_user->address = $request->input('address');
-            $inci_user->file_path_image = $file_path_image;
-            $inci_user->save();
+            $client = new Client;
+            $client->name = $request->input('name');
+            $client->last_name = $request->input('last_name');
+            $client->phone = $request->input('phone');
+            $client->email = $request->input('email');
+            $client->address = $request->input('address');
+            $client->file_path_image = $file_path_image;
+            $client->save();
 
-            return (new ClientResource($inci_user))
+            return (new ClientResource($client))
                 ->additional([
                     'meta'     => [
                         "success" => true,
@@ -153,16 +153,27 @@ class ClientController extends Controller
 
         ]);
     }
-    public function getFile($file_path)
+    public function getImage($id, Request $request)
     {
-
+        $client = Client::find($id);
+        $file_path =  $client->file_path_image;
         $contents = Storage::get($file_path);
-        //$file = File::get($path);
         $type = Storage::mimeType($file_path);
+        if(!$request->query->has('base64')){
+            $response = \Response::make($contents, 200);
+            $response->header("Content-Type", $type);
+            return $response;
+        }
+        else {
 
-        $response = \Response::make($contents, 200);
-        $response->header("Content-Type", $type);
-
-        return $response;
+            return response()->json([
+                'data' => [
+                    'base64' => base64_encode($contents),
+                ],
+                'meta' => [
+                    'success' => true,
+                ],
+            ],200);
+        }
     }
 }

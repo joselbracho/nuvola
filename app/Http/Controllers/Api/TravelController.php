@@ -47,7 +47,7 @@ class TravelController extends Controller
      * @param string $id
      * @return string $resultado
      */
-    public function create(Request $request)
+    public function create($id)
     {
         try {
             $this->validateRequest($request, 'create_travel');

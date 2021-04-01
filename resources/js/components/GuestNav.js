@@ -24,20 +24,15 @@ class GuestNav extends Component {
             <img src="/img/logo-1.png" className="logo-nav" />
         </Link>
 
-	    	
-	      <Link
-	        to="/"
-	        className="brand">
-	        	<span className="name-nav">PRUEBA PRÁCTICA</span>
-	      </Link>
+	    
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
             <Link
-              className="button-1"
-              to="/historial"
+              className="btn btn-secondary"
+              to="/"
               >
-              HISTORIAL 
+              Clients / Travels 
             </Link>
           </ul>
         </div>
