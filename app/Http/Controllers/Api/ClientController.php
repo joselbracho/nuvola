@@ -26,7 +26,8 @@ class ClientController extends Controller
             return $query->where('clients.name', 'LIKE', '%' . $search . '%')
                 ->orWhere('clients.last_name', 'LIKE', '%' . $search . '%')
                 ->orWhere('clients.email', 'LIKE', '%' . $search . '%')
-                ->orWhere('clients.address', 'LIKE', '%' . $search . '%');
+                ->orWhere('clients.address', 'LIKE', '%' . $search . '%')
+                ->orWhere('clients.phone', 'LIKE', '%' . $search . '%');
         });
 
         // Order By
@@ -51,7 +52,7 @@ class ClientController extends Controller
     public function create(Request $request)
     {
         try {
-            dd($request);
+
             $this->validateRequest($request, 'create_client');
 
             if ($request->file('file_path_image')) {
@@ -89,37 +90,30 @@ class ClientController extends Controller
     public function update($id, Request $request)
     {
         try {
-            $extraRules = null;
-            if ($request->input('password')) {
-                $extraRules = ['password' => 'required|string|min:8|confirmed'];
-            }
 
-            $this->validateRequest($request, 'update_inci_user', ['inci_user_id' => $id]);
+            $this->validateRequest($request, 'update_client', ['client_id' => $id]);
 
-            $inci_user = Client::find($id);
+            $upload_file = $request->file('file_path_image');
+            $file_path_image = time().str_replace(' ', '-', $upload_file->getClientOriginalName());
+            Storage::disk('local')->putFileAs(
+                '/',
+                $upload_file,
+                $file_path_image
+            );
+            
+          
+            $client = Client::find($id);
 
+            $client->name = $request->input('name');
+            $client->last_name = $request->input('last_name');
+            $client->phone = $request->input('phone');
+            $client->email = $request->input('email');
+            $client->address = $request->input('address');
+            $client->file_path_image = $file_path_image;
 
-            $inci_user->name = $request->input('name');
-            $inci_user->last_name = $request->input('last_name');
-            $inci_user->email = $request->input('email');
-            $inci_user->document_type_id = $request->input('document_type_id');
-            $inci_user->document_number = $request->input('document_number');
-            $inci_user->state_id = $request->input('state_id');
-            $inci_user->municipality_id = $request->input('municipality_id');
-            $inci_user->city_id = $request->input('city_id');
-            $inci_user->gender_id = $request->input('gender_id');
-            $inci_user->phone_number = $request->input('phone_number');
-            $inci_user->mobile_number = $request->input('mobile_number');
-            $inci_user->territory = $request->input('territory');
-            $inci_user->educational_level = $request->input('educational_level_id');
-            $inci_user->population_group_id = $request->input('population_group_id');
-            //$inci_user->file_path_document = $file_path_document;
-            //$inci_user->file_path_eps_certificate = $file_path_eps_certificate;
-            $inci_user->password =  bcrypt($request->input('password'));
+            $client->save();
 
-            $inci_user->save();
-
-            return (new ClientResource($inci_user))
+            return (new ClientResource($client))
                 ->additional([
                     'meta'     => [
                         "success" => true,
@@ -133,12 +127,12 @@ class ClientController extends Controller
 
     public function delete($id)
     {
-        $inci_user = Client::find($id);
+        $client = Client::find($id);
 
-        if ($inci_user == null) {
+        if ($client == null) {
             return response()->json([
                 "data" => [
-                    "message" => "El usuario no puede eliminarse.",
+                    "message" => "Client canno't be deleted.",
                 ],
                 "meta" => [
                     "success" => false,
@@ -146,11 +140,11 @@ class ClientController extends Controller
 
             ]);
         }
-        $inci_user->delete();
+        $client->delete();
 
         return response()->json([
             "data" => [
-                "message" => "Usuario eleminado satisfactoriamente.",
+                "message" => "Client deleted correctly.",
             ],
             "meta" => [
                 "success" => true,
