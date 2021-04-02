@@ -16,5 +16,11 @@ return [
         'address' => 'required|max:255',
         'email' => 'unique:clients,email,{client_id}',
     ],
+    'create_travel'  => [
+        'travel_date' => 'required|date',
+        'country_id' => 'required|exists:countries,id',
+        'city' => 'required|max:255',
+        'client_email' => 'required|exists:clients,email',
+    ],
 
 ];

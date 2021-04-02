@@ -34,8 +34,30 @@ Route::name('api.')->namespace('Api')->group(function () {
         // create travel
         Route::post('travels/create', 'TravelController@create')->name('travels.create');
         // SOAP travels
-        Route::any('/soap/travels','SoapController@soap');
+        Route::any('soap/travels', function() {
+            require_once (base_path().'\nusoap.php');
+            $server = new \nusoap_server();
 
+            $server->configureWSDL('TravelsService', false, url('api/travels/create'));
+
+            $server->register('createTravels',
+                array(
+                    'travel_date' => 'xsd:string',
+                    'country_id' => 'xsd:string',
+                    'city' => 'xsd:string',
+                    'client_email' => 'xsd:string',
+                ),
+                array('output' => 'xsd:string'),
+            );
+
+            function createTravels($travel_date){
+                dd('hola');
+                return $travel_date;
+            }
+
+            $rawPostData = file_get_contents("php://input");
+            return \Response::make($server->service($rawPostData), 200, array('Content-Type' => 'text/xml; charset=ISO-8859-1'));
+        });
         
     });
 });

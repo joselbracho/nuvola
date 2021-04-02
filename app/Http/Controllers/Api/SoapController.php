@@ -1,48 +1,27 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\TravelController;
-use WSDL\WSDLCreator;
+use App\Http\Controllers\Controller;
+class SoapController extends Controller {
 
+    public function server() {
+        require_once (base_path().'\nusoap.php');
+        $server = new \nusoap_server();
 
-class SoapController extends Controller
-{
-	public function __construct() {
-        ini_set('soap.wsdl_cache_enabled', 0);
-        ini_set('soap.wsdl_cache_ttl', 0);
-        ini_set('default_socket_timeout', 300);
-        ini_set('max_execution_time', 0);
+        $server->configureWSDL('TravelsService', false, url('api'));
+
+        $server->register('createTravels',
+            array('input' => 'xsd:string'),
+            array('output' => 'xsd:string'),
+        );
+
+        function createTravels($input){
+            return $input;
+        }
+
+        $rawPostData = file_get_contents("php://input");
+        return \Response::make($server->service($rawPostData), 200, array('Content-Type' => 'text/xml; charset=ISO-8859-1'));
     }
-
-	public function soap() {
-		// define class
-		$class = new TravelController();
-		$wsdl = new WSDLCreator("App\Http\Controllers\Api\TravelController", \URL::to('/').'/soap/travels');
-		if (isset($_GET['wsdl'])) {
-		    
-		    $wsdl->setNamespace(\URL::to('/').'/soap');
-		    $wsdl->renderWSDL();
-		    exit;
-		}
-
-		$server = new \SoapServer(null, array(
-		    'uri' => \URL::to('/').'/soap/travels?wsdl'
-		));
-
-		$wsdl->renderWSDLService();
-		$server->setObject($class);
-	    ob_start();
-
-	    $response = new Response();
-	    $response->headers->set("Content-Type","text/xml; charset=utf-8");
-
-	    $server->handle();
-	    $response->setContent(ob_get_clean());
-
-	    return $response;
-	  }
 
 }

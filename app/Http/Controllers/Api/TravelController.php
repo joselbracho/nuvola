@@ -42,14 +42,14 @@ class TravelController extends Controller
         return new TravelResource(Travel::find($id));
     }
 
-    /**
-     * @WebMethod
-     * @param string $id
-     * @return string $resultado
-     */
-    public function create($id)
+    public function create(Request $request)
     {
         try {
+            $xml = simplexml_load_string($request->getContent());
+            $json = json_encode($xml);
+            $array_body = json_decode($json,TRUE);
+            $request->request->add($array_body['Body']['createTravels']);
+
             $this->validateRequest($request, 'create_travel');
           
             $travel = new Travel;
@@ -59,7 +59,7 @@ class TravelController extends Controller
             $travel->client_email = $request->input('client_email');
             $travel->save();
 
-            return (new TravelResource($inci_user))
+            return (new TravelResource($travel))
                 ->additional([
                     'meta'     => [
                         "success" => true,

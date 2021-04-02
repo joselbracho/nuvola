@@ -221,14 +221,11 @@ class Clients extends Component {
                           data-target="#deleteModal">
                             Delete
                         </button>
-                        <button 
-                          type="button"
-                          className="btn btn-info btn-sm"
-                          onClick={(e) => {this.itemSelected(e, item.id)}}
-                          data-toggle="modal" 
-                          data-target="#editClientModal">
+                        <Link 
+                          to={`clients/${item.id}`}
+                          className="btn btn-info btn-sm">
                             View Details / Travels
-                        </button>
+                        </Link>
                       </td>
                     </tr>
                   ) : ''

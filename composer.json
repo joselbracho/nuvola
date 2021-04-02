@@ -10,7 +10,6 @@
     "require": {
         "php": "^7.2",
         "fideloper/proxy": "^4.0",
-        "georgo/wsdl-creator": "1.4.1.4",
         "guzzlehttp/guzzle": "^6.5|^7.0.1",
         "guzzlehttp/oauth-subscriber": "0.4.*",
         "laravel/framework": "^6.0",

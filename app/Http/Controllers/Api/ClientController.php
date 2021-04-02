@@ -39,14 +39,19 @@ class ClientController extends Controller
 
     public function getClient($id)
     {
-        return new ClientResource(Client::find($id)->with('travels')->get());
+        return (new ClientResource(Client::with('travels')->find($id)))
+                ->additional([
+                    'meta'     => [
+                        "success" => true,
+                    ]
+                ]);
     }
 
 
     public function create(Request $request)
     {
         try {
-            
+            dd($request);
             $this->validateRequest($request, 'create_client');
 
             if ($request->file('file_path_image')) {
